@@ -12,19 +12,43 @@ function GestorPosts() {
 
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");
+  const [autor, setAutor] = useState("");
+  const [busqueda, setBusqueda] = useState("");
+
+  const postsFiltrados = posts.filter((post) =>
+    post.title.toLowerCase().includes(busqueda.toLowerCase())
+  );
 
   async function manejarEnvio(evento) {
     evento.preventDefault();
 
-    if (titulo.trim() === "" || contenido.trim() === "") {
-      alert("Debe completar el título y el contenido.");
+    if (titulo.trim() === "" || contenido.trim() === "" || autor.trim() === "") {
+      alert("Debe completar el título, el contenido y el autor.");
       return;
     }
 
-    await agregarPost(titulo, contenido);
+    if (titulo.trim().length < 5) {
+      alert("El título debe tener mínimo 5 caracteres.");
+      return;
+    }
+
+    if (contenido.trim().length < 10) {
+      alert("El contenido debe tener mínimo 10 caracteres.");
+      return;
+    }
+
+    await agregarPost(titulo, contenido, autor);
 
     setTitulo("");
     setContenido("");
+    setAutor("");
+  }
+
+  function manejarEliminar(id) {
+    const confirmar = confirm("¿Está seguro de eliminar esta publicación?");
+    if (confirmar) {
+      eliminarPost(id);
+    }
   }
 
   if (cargando) {
@@ -42,7 +66,7 @@ function GestorPosts() {
       {error && <p className="error">{error}</p>}
 
       <form onSubmit={manejarEnvio} className="formulario">
-        <label htmlFor="titulo">Título:</label>
+        <label htmlFor="titulo">Título: <span className="contador">{titulo.length} caracteres (mínimo 5)</span></label>
         <input
           id="titulo"
           type="text"
@@ -51,7 +75,7 @@ function GestorPosts() {
           placeholder="Ingrese el título"
         />
 
-        <label htmlFor="contenido">Contenido:</label>
+        <label htmlFor="contenido">Contenido: <span className="contador">{contenido.length} caracteres (mínimo 10)</span></label>
         <textarea
           id="contenido"
           value={contenido}
@@ -60,25 +84,44 @@ function GestorPosts() {
           rows="4"
         />
 
+        <label htmlFor="autor">Autor:</label>
+        <input
+          id="autor"
+          type="text"
+          value={autor}
+          onChange={(e) => setAutor(e.target.value)}
+          placeholder="Ingrese el autor"
+        />
+
         <button type="submit">Crear publicación</button>
       </form>
 
       <hr />
 
       <h3>Publicaciones registradas</h3>
+      <p>Total de publicaciones: {posts.length}</p>
 
-      {posts.length === 0 ? (
+      <input
+        type="text"
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+        placeholder="Buscar por título..."
+        className="buscador"
+      />
+
+      {postsFiltrados.length === 0 ? (
         <p>No existen publicaciones.</p>
       ) : (
         <div className="lista-posts">
-          {posts.map((post) => (
+          {postsFiltrados.map((post) => (
             <article className="post" key={post.id}>
               <h4>{post.title}</h4>
               <p>{post.body}</p>
+              {post.autor && <p className="autor">Autor: {post.autor}</p>}
 
               <button
                 className="btn-eliminar"
-                onClick={() => eliminarPost(post.id)}
+                onClick={() => manejarEliminar(post.id)}
               >
                 Eliminar
               </button>

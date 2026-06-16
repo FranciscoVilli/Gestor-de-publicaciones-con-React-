@@ -24,10 +24,11 @@ function usePosts() {
     cargarPosts();
   }, []);
 
-  async function agregarPost(titulo, contenido) {
+  async function agregarPost(titulo, contenido, autor) {
     const nuevoPost = {
       title: titulo,
       body: contenido,
+      autor: autor,
       userId: 1
     };
 
