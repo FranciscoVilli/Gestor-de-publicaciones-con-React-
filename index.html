@@ -1,3 +1,59 @@
+<!--
+  PREGUNTAS DE ANÁLISIS - Laboratorio React: Hooks y Axios
+
+  1. ¿Para qué sirve useState en este laboratorio?
+     useState se usa para manejar el estado local de los componentes y el hook.
+     Se usa para almacenar la lista de publicaciones (posts), el estado de carga
+     (cargando), los errores (error), y los campos del formulario (titulo,
+     contenido, autor, busqueda).
+
+  2. ¿Por qué usamos useEffect para cargar las publicaciones?
+     Porque useEffect permite ejecutar código con efectos secundarios después de
+     que el componente se monta. Con el arreglo vacío [] como dependencia, se
+     ejecuta una sola vez al inicio, lo que es ideal para cargar datos desde
+     una API al arrancar la aplicación.
+
+  3. ¿Qué diferencia hay entre api.js y postService.js?
+     api.js configura la instancia base de Axios con la URL raíz y el timeout,
+     es una configuración genérica reutilizable. postService.js usa esa instancia
+     para definir las operaciones específicas de publicaciones: obtener, crear y
+     eliminar.
+
+  4. ¿Por qué separamos la lógica en un custom hook?
+     Para reutilizar la lógica de negocio sin repetir código en los componentes.
+     El custom hook usePosts centraliza el manejo de estados y llamadas a la API,
+     mientras que el componente solo se encarga de la interfaz visual.
+
+  5. ¿Qué hace setPosts(datos.slice(0, 10))?
+     Toma solo los primeros 10 elementos del arreglo de publicaciones retornado
+     por la API y los guarda en el estado posts. Sirve para limitar la cantidad
+     de publicaciones mostradas en pantalla.
+
+  6. ¿Qué hace filter cuando eliminamos una publicación?
+     Crea un nuevo arreglo con todas las publicaciones excepto la que tiene el id
+     que se quiere eliminar. No modifica el arreglo original, sino que genera uno
+     nuevo sin el elemento eliminado.
+
+  7. ¿Qué ocurre si la API no responde?
+     El bloque catch captura el error y actualiza el estado error con un mensaje
+     descriptivo. El componente muestra ese mensaje en pantalla gracias al
+     renderizado condicional {error && <p className="error">{error}</p>}.
+
+  8. ¿Por qué se usa preventDefault() en el formulario?
+     Para evitar el comportamiento por defecto del formulario HTML, que consiste
+     en recargar la página al hacer submit. Con preventDefault() se controla
+     manualmente lo que ocurre al enviar el formulario.
+
+  9. ¿Qué ventaja tiene Axios frente a escribir todo directamente con fetch?
+     Axios simplifica el código: convierte automáticamente la respuesta a JSON,
+     maneja errores HTTP lanzando excepciones, permite configurar una instancia
+     base con URL y timeout, y tiene mejor compatibilidad entre navegadores.
+
+  10. ¿Qué parte del proyecto se encarga de la interfaz visual?
+      El componente GestorPosts.jsx ubicado en src/components/. Es el encargado
+      de renderizar el formulario, la lista de publicaciones, los mensajes de
+      carga y error, y el buscador.
+-->
 <!doctype html>
 <html lang="en">
   <head>
